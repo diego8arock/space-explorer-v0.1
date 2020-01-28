@@ -17,6 +17,7 @@ func _ready() -> void:
 	
 	target = get_node(path_target)
 	crowd = get_tree().get_nodes_in_group("escorts")
+	Debug.node(name, true)
 
 func _physics_process(delta: float) -> void:
 	
@@ -36,3 +37,4 @@ func _physics_process(delta: float) -> void:
 	mass)
 	move_and_slide(velocity)
 	global_rotation = steering.rotate_to(velocity, global_rotation, delta)
+	Debug.do(name, "velocity", velocity)

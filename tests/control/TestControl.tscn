@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://ui/control/Joystick.tscn" type="PackedScene" id=1]
+[ext_resource path="res://tests/quit/TestQuit.tscn" type="PackedScene" id=2]
+[ext_resource path="res://tests/control/CharacterTest.gd" type="Script" id=3]
+[ext_resource path="res://tests/control/ufoGreen.png" type="Texture" id=4]
+
+[node name="TestControl" type="Node2D"]
+
+[node name="Joystick" parent="." instance=ExtResource( 1 )]
+position = Vector2( 192.104, 910.877 )
+debug = true
+
+[node name="TestQuit" parent="." instance=ExtResource( 2 )]
+
+[node name="CharacterTest" type="KinematicBody2D" parent="."]
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="CharacterTest"]
+position = Vector2( 1055.49, 429.537 )
+texture = ExtResource( 4 )

@@ -14,6 +14,7 @@ position = Vector2( 1676.98, 953.76 )
 [node name="TestCargo" parent="." instance=ExtResource( 2 )]
 position = Vector2( 443.421, 382.135 )
 path_target = NodePath("../Destination")
+debug = true
 
 [node name="TestEscort" parent="." instance=ExtResource( 3 )]
 position = Vector2( 163.137, 198.097 )
