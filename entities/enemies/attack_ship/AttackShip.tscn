@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://entities/enemies/attack_ship/AttackShip.gd" type="Script" id=1]
+[ext_resource path="res://entities/enemies/attack_ship/assets/enemyBlack1.png" type="Texture" id=2]
+[ext_resource path="res://modules/movement/Steering.tscn" type="PackedScene" id=3]
+[ext_resource path="res://modules/health/Health.tscn" type="PackedScene" id=4]
+[ext_resource path="res://weapons/muzzle/Muzzle.tscn" type="PackedScene" id=5]
+[ext_resource path="res://weapons/bullet/EnemyBullet.tscn" type="PackedScene" id=6]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 200.0
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 400.0
+
+[node name="AttackShip" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 45
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PoolVector2Array( -16.8184, -46.3633, 39.309, -24.9588, 36.6929, -10.6891, 10.7696, -15.2079, 16.9532, -10.927, 16.2397, 12.1423, 10.7696, 17.1367, 35.2659, 9.76403, 40.7359, 24.0337, -14.4401, 45.4382, -40.839, 30.455, -33.942, 12.1423, -24.191, 9.05054, -23.2397, -9.26218, -33.4663, -10.927, -41.3146, -29.2397 )
+
+[node name="Steering" parent="." instance=ExtResource( 3 )]
+
+[node name="Health" parent="." instance=ExtResource( 4 )]
+
+[node name="Muzzles" type="Node2D" parent="."]
+editor/display_folded = true
+
+[node name="MuzzleLeft" parent="Muzzles" instance=ExtResource( 5 )]
+position = Vector2( 45, -15 )
+rotation = 0.00872665
+bullet = ExtResource( 6 )
+
+[node name="MuzzleRight" parent="Muzzles" instance=ExtResource( 5 )]
+position = Vector2( 45, 15 )
+rotation = -0.00872665
+bullet = ExtResource( 6 )
+
+[node name="FireRate" type="Timer" parent="."]
+autostart = true
+
+[node name="AttackRange" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
+shape = SubResource( 1 )
+
+[node name="FollowRange" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FollowRange"]
+shape = SubResource( 2 )
+[connection signal="timeout" from="FireRate" to="." method="_on_FireRate_timeout"]
