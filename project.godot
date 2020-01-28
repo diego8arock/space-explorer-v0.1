@@ -13,16 +13,30 @@ _global_script_classes=[ {
 "class": "Steering",
 "language": "GDScript",
 "path": "res://modules/movement/Steering.gd"
+}, {
+"base": "Node",
+"class": "Variable",
+"language": "GDScript",
+"path": "res://debug/Variable.gd"
 } ]
 _global_script_class_icons={
-"Steering": ""
+"Steering": "",
+"Variable": ""
 }
 
 [application]
 
 config/name="space-explorer-v0.1"
-run/main_scene="res://tests/TestConvoy.tscn"
+run/main_scene="res://tests/combat/TestCombat.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Debug="*res://globals/debug.gd"
+Groups="*res://globals/groups.gd"
+Events="*res://globals/events.gd"
+Modules="*res://globals/modules.gd"
+Functions="*res://globals/functions.gd"
 
 [display]
 
@@ -48,12 +62,24 @@ player_right={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":68,"unicode":0,"echo":false,"script":null)
  ]
 }
+debug={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":96,"unicode":0,"echo":false,"script":null)
+ ]
+}
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [layer_names]
 
 2d_physics/layer_1="player"
-2d_physics/layer_2="cargo_ship"
-2d_physics/layer_3="escort_cargo_ship"
+2d_physics/layer_2="enemy"
+2d_physics/layer_3="ally"
+2d_physics/layer_4="player_bullet"
+2d_physics/layer_5="enemy_bullet"
+2d_physics/layer_6="ally_bullet"
 
 [rendering]
 
