@@ -42,7 +42,7 @@ func flee(
 	) -> Vector2:
 
 	var desired_velocity = (global_position - target_position).normalized() * max_velocity_speed
-	var steering = steer(desired_velocity - velocity)
+	var steering = steer(desired_velocity - velocity, max_force, mass)
 	return (velocity + steering).clamped(max_velocity_speed)
 	
 func arrive(		
@@ -159,7 +159,7 @@ func separation(
 		max_separation: float = DEFAULT_MAX_SEPARATION
 	) -> Vector2: 
 
-	var force: Vector2
+	var force: Vector2 = Vector2.ZERO
 	var neighbor_count: int = 0
 	
 	for cr in crowd:
