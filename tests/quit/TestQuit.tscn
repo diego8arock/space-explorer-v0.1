@@ -2,5 +2,19 @@
 
 [ext_resource path="res://tests/quit/TestQuit.gd" type="Script" id=1]
 
-[node name="TestQuit" type="Node"]
+[node name="TestQuit" type="Control"]
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TouchScreenButton" type="Button" parent="."]
+margin_left = 1754.72
+margin_top = 27.6929
+margin_right = 1897.72
+margin_bottom = 123.693
+text = "QUIT"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="TouchScreenButton" to="." method="_on_TouchScreenButton_pressed"]

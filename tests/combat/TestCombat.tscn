@@ -13,7 +13,14 @@
 position = Vector2( 934.489, 429.586 )
 
 [node name="Joystick" parent="." instance=ExtResource( 3 )]
-position = Vector2( 131.107, 954.015 )
+position = Vector2( 327.766, 809.786 )
+scale = Vector2( 2.5, 2.5 )
 
 [node name="AttackShip" parent="." instance=ExtResource( 4 )]
 position = Vector2( 371.006, 248.267 )
+
+[node name="AttackShip2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 1602.64, 453.401 )
+
+[node name="AttackShip3" parent="." instance=ExtResource( 4 )]
+position = Vector2( 979.974, 91.5249 )
