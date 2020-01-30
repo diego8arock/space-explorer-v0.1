@@ -9,33 +9,30 @@
 [node name="Player" type="KinematicBody2D"]
 collision_mask = 18
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+scale = Vector2( 0.5, 0.5 )
 polygon = PoolVector2Array( 37.6014, -7.8951, 37.6014, 6.79022, 11.9021, 12.3846, -0.685307, 34.4126, -0.860134, 38.9581, 7.007, 43.5035, 7.007, 50.1469, -24.2867, 45.9511, -25.1608, 42.6294, -21.4895, 40.3567, -27.6084, 13.958, -38.0979, 6.96504, -38.0979, -7.54545, -27.6084, -14.014, -20.965, -40.4126, -24.1119, -43.5594, -25.1608, -46.7063, 5.08393, -50.028, 7.18183, -44.7832, 0.713295, -40.4126, -2.60838, -35.5175, 11.7273, -12.2657 )
 
 [node name="Health" parent="." instance=ExtResource( 3 )]
 
 [node name="AutoGun" parent="." instance=ExtResource( 4 )]
-position = Vector2( -20, 0 )
+position = Vector2( -11, 0 )
 
 [node name="Base" parent="AutoGun" index="0"]
-scale = Vector2( 0.4, 0.4 )
+scale = Vector2( 0.2, 0.2 )
 
 [node name="Pivot" parent="AutoGun" index="1"]
 bullet = ExtResource( 5 )
 
 [node name="Gun" parent="AutoGun/Pivot" index="0"]
-scale = Vector2( 0.5, 0.5 )
+scale = Vector2( 0.25, 0.25 )
 
-[node name="AttackRange" parent="AutoGun/Pivot" index="4"]
-editor/display_folded = true
+[node name="Muzzle" parent="AutoGun/Pivot" index="1"]
+position = Vector2( 12, 0 )
 
 [editable path="AutoGun"]
-
-[editable path="AutoGun/Pivot/AttackRange"]
