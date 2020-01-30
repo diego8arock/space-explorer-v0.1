@@ -19,9 +19,11 @@ collision_mask = 45
 script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+scale = Vector2( 0.5, 0.5 )
 polygon = PoolVector2Array( -16.8184, -46.3633, 39.309, -24.9588, 36.6929, -10.6891, 10.7696, -15.2079, 16.9532, -10.927, 16.2397, 12.1423, 10.7696, 17.1367, 35.2659, 9.76403, 40.7359, 24.0337, -14.4401, 45.4382, -40.839, 30.455, -33.942, 12.1423, -24.191, 9.05054, -23.2397, -9.26218, -33.4663, -10.927, -41.3146, -29.2397 )
 
 [node name="Steering" parent="." instance=ExtResource( 3 )]
@@ -29,7 +31,6 @@ polygon = PoolVector2Array( -16.8184, -46.3633, 39.309, -24.9588, 36.6929, -10.6
 [node name="Health" parent="." instance=ExtResource( 4 )]
 
 [node name="Muzzles" type="Node2D" parent="."]
-editor/display_folded = true
 
 [node name="MuzzleLeft" parent="Muzzles" instance=ExtResource( 5 )]
 position = Vector2( 45, -15 )
