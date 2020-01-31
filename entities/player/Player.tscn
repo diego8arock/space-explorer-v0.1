@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://entities/player/Player.gd" type="Script" id=1]
 [ext_resource path="res://entities/player/assets/playerShip1_orange.png" type="Texture" id=2]
 [ext_resource path="res://modules/health/Health.tscn" type="PackedScene" id=3]
 [ext_resource path="res://weapons/autogun/AutoGun.tscn" type="PackedScene" id=4]
 [ext_resource path="res://weapons/bullet/PlayerBullet.tscn" type="PackedScene" id=5]
+[ext_resource path="res://entities/player/PlayerCamera.gd" type="Script" id=6]
 
 [node name="Player" type="KinematicBody2D"]
 collision_mask = 18
@@ -34,5 +35,17 @@ scale = Vector2( 0.25, 0.25 )
 
 [node name="Muzzle" parent="AutoGun/Pivot" index="1"]
 position = Vector2( 12, 0 )
+
+[node name="PlayerCamera" type="Camera2D" parent="."]
+current = true
+smoothing_enabled = true
+smoothing_speed = 30.0
+drag_margin_left = 0.1
+drag_margin_top = 0.1
+drag_margin_right = 0.1
+drag_margin_bottom = 0.1
+editor_draw_limits = true
+editor_draw_drag_margin = true
+script = ExtResource( 6 )
 
 [editable path="AutoGun"]
