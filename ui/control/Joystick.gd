@@ -33,15 +33,16 @@ func _input(event: InputEvent) -> void:
 			
 			if get_button_pos().length() > boundary:
 				button.position = get_button_pos().normalized() * boundary - radius
-				
+			
+			visible = true	
 			ongoing_drag = event.get_index()
+			Events.emit_signal("joystick_moved", get_value())
 		
-		Events.emit_signal("joystick_moved", get_value())
 			
 	if event is InputEventScreenTouch and !event.is_pressed()  and event.get_index() == ongoing_drag:
+		visible = false
 		ongoing_drag = -1
-		
-	
+		Events.emit_signal("joystick_stopped")	
 		
 func get_value() -> Vector2:
 	
@@ -49,3 +50,4 @@ func get_value() -> Vector2:
 		Debug.do(name, "joystick-value", get_button_pos().normalized())
 		return get_button_pos().normalized()
 	return Vector2.ZERO
+
