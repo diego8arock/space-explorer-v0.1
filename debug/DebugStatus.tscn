@@ -6,19 +6,29 @@
 [node name="DebugStatus" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = -1920.0
+margin_bottom = -1080.0
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="MarginContainer" type="VBoxContainer" parent="."]
-margin_right = 1920.0
-margin_bottom = 1080.0
+margin_left = 1772.93
+margin_top = 1036.45
+margin_right = 1904.93
+margin_bottom = 1069.45
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Label" type="Label" parent="MarginContainer"]
-margin_top = 1056.0
-margin_right = 1920.0
-margin_bottom = 1080.0
+margin_top = 9.0
+margin_right = 132.0
+margin_bottom = 33.0
 custom_fonts/font = ExtResource( 2 )
 text = "DEBUG OFF"
 align = 2
