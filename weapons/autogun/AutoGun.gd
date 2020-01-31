@@ -6,102 +6,122 @@ export var bullet: PackedScene
 enum CHARACTER { PLAYER, ENEMY, ALLY }
 enum STATES { IDLE,  ATTACK }
 #OnReady
-onready var muzzle = $Muzzle
-onready var get_target = $GetTarget
-onready var fire_rate = $FireRate
+onready var n_muzzle = $Muzzle
+onready var n_fire_rate = $FireRate
 #Internal Members
-var rotate_speed: float = 10.0
-var targets = []
-var target
-var current_state
-var body_entered
-var body_exited
+var m_rotate_speed: float = 10.0
+var m_targets = []
+var m_target
+var m_current_state
+var m_body_entered
+var m_body_exited
 #External Members
 var em_attack_groups = [] setget set_attack_groups
-var em_character setget set_character
-var em_damage setget set_damage
+var em_character setget set_character #enum
+var em_damage: float setget set_damage
+var em_spread_range: float = 0.0 setget set_spread_range
+var em_fire_rate: float = 1.0 setget set_fire_rate
 
 func _ready() -> void:
 	
 	Debug.add(name)
-	get_target.start()
-	current_state = STATES.IDLE
+	m_current_state = STATES.IDLE
 
 func _process(delta: float) -> void:
 	
-	Debug.do(name, "state", STATES.keys()[current_state])
-	match current_state:
+	Debug.do(name, "state", STATES.keys()[m_current_state])
+	match m_current_state:
 		STATES.IDLE:
 			pass
 		STATES.ATTACK:
-			var target_direction = (target.global_position - global_position).normalized()
+			var target_direction = (m_target.global_position - global_position).normalized()
 			var current_direction = Vector2.RIGHT.rotated(global_rotation)
-			global_rotation = current_direction.linear_interpolate(target_direction, rotate_speed * delta).angle()
+			global_rotation = current_direction.linear_interpolate(target_direction, m_rotate_speed * delta).angle()
 
 func shoot() -> void:
 	
 	assert(em_attack_groups && em_attack_groups.size() > 0)
 		
-	var spread = rand_range(-10.0, 10.0)
+	var spread = rand_range(-em_spread_range, em_spread_range)
 	var new_bullet = bullet.instance()
-	var direction = Vector2(1, 0).rotated(muzzle.global_rotation + deg2rad(spread))
+	var direction = Vector2(1, 0).rotated(n_muzzle.global_rotation + deg2rad(spread))
+	#Only player uses homing bullets
+	if em_character == CHARACTER.PLAYER:
+		new_bullet.set_target(m_target)
 	new_bullet.set_attack_groups(em_attack_groups)
 	new_bullet.set_damage(em_damage)
-	new_bullet.shoot(muzzle.global_position, direction)	
+	new_bullet.shoot(n_muzzle.global_position, direction)	
 	new_bullet.global_scale = $Gun.global_scale
 	get_tree().root.add_child(new_bullet)
-
-func acquire_target() -> void:	
-	
-	if targets.size() > 0:
-		target = targets[0]
-		target.connect("died", self, "on_Target_died")
-		fire_rate.start()	
-		current_state = STATES.ATTACK
-	else:
-		fire_rate.stop()
-		current_state = STATES.IDLE
-			
-func remove_target() -> void:
-	
-	targets.erase(target)
-	target = null
-	acquire_target()	
 	
 func target_detected() -> void:
 	
-	if Functions.is_object_in_any_group(body_entered, em_attack_groups):
-		targets.append(body_entered)
+	if Functions.is_object_in_any_group(m_body_entered, em_attack_groups):
+		
+		assert (m_body_entered.has_method("taget_detected"))
+		assert (m_body_entered.has_method("target_not_detected"))
+		assert (m_body_entered.has_method("target_aimed"))
+		
+		m_targets.append(m_body_entered)
+		m_body_entered.taget_detected()
 		acquire_target()
 		
 func target_lost() -> void:
 	
-	if Functions.is_object_in_any_group(body_exited, em_attack_groups):
-		if targets.has(body_exited):
-			targets.erase(body_exited)
-			if body_exited == target:
-				target = null
+	if Functions.is_object_in_any_group(m_body_exited, em_attack_groups):
+		if m_targets.has(m_body_exited):
+			m_targets.erase(m_body_exited)
+			m_body_exited.target_not_detected()
+			if m_body_exited == m_target:
+				m_target = null
 				acquire_target()
+				
+func acquire_target() -> void:	
+	
+	if m_targets.size() > 0:
+		if not m_target:
+			set_target(m_targets[0])
+	else:
+		n_fire_rate.stop()
+		m_current_state = STATES.IDLE
+			
+func remove_target() -> void:
+	
+	m_targets.erase(m_target)
+	m_target = null
+	acquire_target()	
+				
+func set_target(body) -> void:
+	
+	m_target = body
+	if not m_target.is_connected("died", self, "on_Target_died"):	
+		m_target.connect("died", self, "on_Target_died")
+	m_target.target_aimed()
+	n_fire_rate.start()	
+	m_current_state = STATES.ATTACK
+				
+func force_set_target(body) -> void:
+	
+	Debug.do(name, "force_set_target", "called")
+	if m_targets.has(body):
+		if m_target:
+			m_target.taget_detected()
+		set_target(body)
 
 #Events
-func _on_GetTarget_timeout() -> void:
-	
-	acquire_target()
-	
 func _on_FireRate_timeout() -> void:	
 	
 	shoot()
-	fire_rate.start()
+	n_fire_rate.start()
 		
 func _on_AttackRange_body_entered(body: PhysicsBody2D) -> void:
 	
-	body_entered = body
-	if not target:
-		target_detected()
+	m_body_entered = body
+	target_detected()
 
 func _on_AttackRange_body_exited(body: PhysicsBody2D) -> void:
 	
-	body_exited = body
+	m_body_exited = body
 	target_lost()
 	
 func on_Target_died() -> void:
@@ -120,3 +140,12 @@ func set_character(character) -> void:
 func set_damage(damage) -> void:
 	
 	em_damage = damage
+	
+func set_spread_range(spread_range: float) -> void:
+	
+	em_spread_range = spread_range
+	
+func set_fire_rate(fire_rate: float) -> void:
+	
+	em_fire_rate = fire_rate
+	n_fire_rate.wait_time = em_fire_rate
