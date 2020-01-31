@@ -15,9 +15,10 @@ func _ready() -> void:
 	em_health = DEFAULT_MAX_HEALTH
 	
 	if not owner.has_method("safe_delete"):
-		push_warning("owner %s as no safe_delete method" % owner.name)
+		push_warning("owner %s as no safe_delete method to connect" % owner.name)
+		
 	if not owner.has_method("died"):
-		push_warning("owner %s as no died method" % owner.name)
+		push_warning("owner %s as no died method to connect" % owner.name)
 		
 	connect("died", owner, "died")
 	safe_delete.connect("timeout", owner, "safe_delete")
