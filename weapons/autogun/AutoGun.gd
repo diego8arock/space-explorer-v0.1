@@ -83,6 +83,8 @@ func acquire_target() -> void:
 	else:
 		n_fire_rate.stop()
 		m_current_state = STATES.IDLE
+		if em_character == CHARACTER.PLAYER:
+			Events.emit_signal("player_auto_gun_target_lost")
 			
 func remove_target() -> void:
 	
@@ -98,6 +100,8 @@ func set_target(body) -> void:
 	m_target.target_aimed()
 	n_fire_rate.start()	
 	m_current_state = STATES.ATTACK
+	if em_character == CHARACTER.PLAYER:
+		Events.emit_signal("player_auto_gun_set_target", m_target)
 				
 func force_set_target(body) -> void:
 	
