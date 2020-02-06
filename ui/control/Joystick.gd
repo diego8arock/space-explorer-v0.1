@@ -8,6 +8,7 @@ var boundary = 50
 var ongoing_drag = -1
 var return_accel = 20.0
 var threshold = 10
+var adjust_position: bool = true
 
 func _ready() -> void:
 	
@@ -22,10 +23,14 @@ func _process(delta: float) -> void:
 func get_button_pos() -> Vector2:
 	
 	return button.position + radius
-
+	
 func _input(event: InputEvent) -> void:
 	
 	if event is InputEventScreenDrag or (event is InputEventScreenTouch and event.is_pressed()):
+		if adjust_position:
+			global_position = event.position
+			adjust_position = false
+		
 		var event_dist_from_center = (event.position - global_position).length()
 		
 		if event_dist_from_center <= boundary * button.global_scale.x or event.get_index() == ongoing_drag:	
@@ -43,6 +48,7 @@ func _input(event: InputEvent) -> void:
 		visible = false
 		ongoing_drag = -1
 		Events.emit_signal("joystick_stopped")	
+		adjust_position = true
 		
 func get_value() -> Vector2:
 	
