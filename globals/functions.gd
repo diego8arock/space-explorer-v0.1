@@ -18,6 +18,6 @@ static func set_object_ready_for_queue_free(object: Node2D, colliders = [], time
 	for t in timers:
 		if t is Timer:
 			t.stop()
-	object.emit_signal(delete_signal_name)
+	object.emit_signal(delete_signal_name, object)
 	
 	

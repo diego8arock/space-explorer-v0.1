@@ -13,7 +13,7 @@ onready var n_aim_target = $AimTarget
 var m_attack_groups = [Groups.PLAYER, Groups.ALLY]
 var m_damage = 10.0
 
-signal died()
+signal died(object)
 
 func _ready() -> void:
 	
