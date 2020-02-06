@@ -135,13 +135,13 @@ func follow(
 		global_position: Vector2,
 		crowd, #array
 		entity, #body
-		follow_distance: float = DEFAULT_FOLLOW_DISTANCE,
-		separtion_radius: float = DEFAULT_SEPARATION_RADIUS, 
-		max_separation: float = DEFAULT_MAX_SEPARATION,
 		max_velocity_speed: float = DEFAULT_MAX_VELOCITY_SPEED, 
 		max_force: float = DEFAULT_MAX_FORCE, 
 		mass: float = DEFAULT_MASS, 
-		arrival_distance: float = DEFAULT_ARRIVAL_DISTANCE		
+		arrival_distance: float = DEFAULT_ARRIVAL_DISTANCE,
+		follow_distance: float = DEFAULT_FOLLOW_DISTANCE,
+		separtion_radius: float = DEFAULT_SEPARATION_RADIUS, 
+		max_separation: float = DEFAULT_MAX_SEPARATION	
 	) -> Vector2:
 	
 	var tv: Vector2 = target_velocity * -1
