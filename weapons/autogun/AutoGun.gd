@@ -1,7 +1,5 @@
 extends Node2D
 
-#Export
-export var bullet: PackedScene
 #Enums
 enum CHARACTER { PLAYER, ENEMY, ALLY }
 enum STATES { IDLE,  ATTACK }
@@ -21,6 +19,7 @@ var em_character setget set_character #enum
 var em_damage: float setget set_damage
 var em_spread_range: float = 0.0 setget set_spread_range
 var em_fire_rate: float = 1.0 setget set_fire_rate
+var em_bullet: PackedScene setget set_bullet
 
 func _ready() -> void:
 	
@@ -43,7 +42,7 @@ func shoot() -> void:
 	assert(em_attack_groups && em_attack_groups.size() > 0)
 		
 	var spread = rand_range(-em_spread_range, em_spread_range)
-	var new_bullet = bullet.instance()
+	var new_bullet = em_bullet.instance()
 	var direction = Vector2(1, 0).rotated(n_muzzle.global_rotation + deg2rad(spread))
 	#Only player uses homing bullets
 	if em_character == CHARACTER.PLAYER:
@@ -124,7 +123,7 @@ func _on_AttackRange_body_exited(body: PhysicsBody2D) -> void:
 	m_body_exited = body
 	target_lost()
 	
-func on_Target_died() -> void:
+func on_Target_died(object) -> void:
 	
 	remove_target()	
 			
@@ -149,3 +148,7 @@ func set_fire_rate(fire_rate: float) -> void:
 	
 	em_fire_rate = fire_rate
 	n_fire_rate.wait_time = em_fire_rate
+	
+func set_bullet(bullet: PackedScene) -> void:
+	
+	em_bullet = bullet
