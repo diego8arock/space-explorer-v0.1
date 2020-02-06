@@ -1,6 +1,27 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://tests/convoy/TestComboy.gd" type="Script" id=1]
+[ext_resource path="res://entities/enemies/attack_ship/AttackShip.tscn" type="PackedScene" id=2]
+[ext_resource path="res://entities/enemies/cargo _ship/CargoShip.tscn" type="PackedScene" id=3]
 
 [node name="TestComboy" type="Node2D"]
 script = ExtResource( 1 )
+
+[node name="Start" type="Position2D" parent="."]
+position = Vector2( 3291.48, 1469.98 )
+
+[node name="End" type="Position2D" parent="."]
+position = Vector2( -219.699, -794.909 )
+
+[node name="CargoShip" parent="." instance=ExtResource( 3 )]
+start_path = NodePath("../Start")
+end_path = NodePath("../End")
+
+[node name="Camera2D" type="Camera2D" parent="CargoShip"]
+current = true
+
+[node name="AttackShip" parent="." instance=ExtResource( 2 )]
+debug = true
+
+[node name="AttackShip2" parent="." instance=ExtResource( 2 )]
+debug = true

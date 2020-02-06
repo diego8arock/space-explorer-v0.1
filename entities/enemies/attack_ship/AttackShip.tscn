@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://entities/enemies/attack_ship/AttackShip.gd" type="Script" id=1]
 [ext_resource path="res://entities/enemies/attack_ship/assets/enemyBlack1.png" type="Texture" id=2]
@@ -7,6 +7,9 @@
 [ext_resource path="res://weapons/muzzle/Muzzle.tscn" type="PackedScene" id=5]
 [ext_resource path="res://weapons/bullet/EnemyBullet.tscn" type="PackedScene" id=6]
 [ext_resource path="res://modules/aim_target/AimTarget.tscn" type="PackedScene" id=7]
+[ext_resource path="res://modules/stats/Stats.tscn" type="PackedScene" id=8]
+[ext_resource path="res://stats/attributes/AttackShipAttributes.tres" type="Resource" id=9]
+[ext_resource path="res://stats/movement/AttackShipMovement.tres" type="Resource" id=10]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 200.0
@@ -21,6 +24,7 @@ radius = 74.7382
 collision_layer = 2
 collision_mask = 45
 script = ExtResource( 1 )
+bullet = ExtResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="."]
 scale = Vector2( 0.5, 0.5 )
@@ -34,20 +38,21 @@ polygon = PoolVector2Array( -16.8184, -46.3633, 39.309, -24.9588, 36.6929, -10.6
 
 [node name="Health" parent="." instance=ExtResource( 4 )]
 
+[node name="Stats" parent="." instance=ExtResource( 8 )]
+attributes = ExtResource( 9 )
+movement = ExtResource( 10 )
+
 [node name="Muzzles" type="Node2D" parent="."]
 
 [node name="MuzzleLeft" parent="Muzzles" instance=ExtResource( 5 )]
 position = Vector2( 45, -15 )
 rotation = 0.00872665
-bullet = ExtResource( 6 )
 
 [node name="MuzzleRight" parent="Muzzles" instance=ExtResource( 5 )]
 position = Vector2( 45, 15 )
 rotation = -0.00872665
-bullet = ExtResource( 6 )
 
 [node name="FireRate" type="Timer" parent="."]
-autostart = true
 
 [node name="AttackRange" type="Area2D" parent="."]
 visible = false
