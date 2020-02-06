@@ -18,6 +18,8 @@ var fire_rate = 0.3
 var spread_range = 2.0
 var moving = false
 
+signal player_global_position(g_position)
+
 func _ready() -> void:
 	
 	Debug.add(name, debug)
@@ -43,6 +45,7 @@ func _physics_process(delta: float) -> void:
 	move_and_slide(velocity * speed)
 	var current_direction = Vector2.RIGHT.rotated(global_rotation)
 	global_rotation = current_direction.normalized().slerp(velocity.normalized(), rotation_speed * delta).angle()
+	Events.emit_signal("player_global_values", global_position, global_rotation)
 		
 func move_player(value) -> void:
 	

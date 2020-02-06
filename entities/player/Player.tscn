@@ -4,7 +4,7 @@
 [ext_resource path="res://entities/player/assets/playerShip1_orange.png" type="Texture" id=2]
 [ext_resource path="res://modules/health/Health.tscn" type="PackedScene" id=3]
 [ext_resource path="res://weapons/autogun/AutoGun.tscn" type="PackedScene" id=4]
-[ext_resource path="res://weapons/bullet/PlayerBullet.tscn" type="PackedScene" id=5]
+[ext_resource path="res://weapons/bullet/AllyBullet.tscn" type="PackedScene" id=5]
 [ext_resource path="res://entities/player/PlayerCamera.gd" type="Script" id=6]
 
 [node name="Player" type="KinematicBody2D"]
@@ -23,18 +23,7 @@ polygon = PoolVector2Array( 37.6014, -7.8951, 37.6014, 6.79022, 11.9021, 12.3846
 
 [node name="AutoGun" parent="." instance=ExtResource( 4 )]
 position = Vector2( -11, 0 )
-
-[node name="Base" parent="AutoGun" index="0"]
-scale = Vector2( 0.2, 0.2 )
-
-[node name="Pivot" parent="AutoGun" index="1"]
 bullet = ExtResource( 5 )
-
-[node name="Gun" parent="AutoGun/Pivot" index="0"]
-scale = Vector2( 0.25, 0.25 )
-
-[node name="Muzzle" parent="AutoGun/Pivot" index="1"]
-position = Vector2( 12, 0 )
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
 current = true
@@ -47,5 +36,3 @@ drag_margin_bottom = 0.1
 editor_draw_limits = true
 editor_draw_drag_margin = true
 script = ExtResource( 6 )
-
-[editable path="AutoGun"]
