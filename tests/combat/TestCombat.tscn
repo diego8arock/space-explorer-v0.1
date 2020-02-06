@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://tests/quit/TestQuit.tscn" type="PackedScene" id=1]
 [ext_resource path="res://entities/player/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://ui/control/Joystick.tscn" type="PackedScene" id=3]
 [ext_resource path="res://entities/enemies/attack_ship/AttackShip.tscn" type="PackedScene" id=4]
+[ext_resource path="res://ui/minimap/Minimap.tscn" type="PackedScene" id=5]
 
 [node name="TestCombat" type="Node2D"]
 
@@ -15,9 +16,11 @@
 visible = false
 position = Vector2( 288.713, 663.513 )
 
+[node name="Minimap" parent="CanvasLayer" instance=ExtResource( 5 )]
+position = Vector2( 1595.24, 749.502 )
+
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 934.489, 429.586 )
-debug = true
 
 [node name="AttackShip" parent="." instance=ExtResource( 4 )]
 position = Vector2( 371.006, 248.267 )
