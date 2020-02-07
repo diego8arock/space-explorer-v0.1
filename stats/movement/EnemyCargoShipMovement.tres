@@ -4,11 +4,11 @@
 
 [resource]
 script = ExtResource( 1 )
-max_speed = 250.0
+max_speed = 1.0
 mass = 2.0
 max_force = 1.0
-rotation_speed = 10.0
+rotation_speed = 1.0
 arrival_distance = 100.0
 follow_distance = 200.0
-separation_radius = 70.0
+separation_radius = 10.0
 max_separation = 10.0
