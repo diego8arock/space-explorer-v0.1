@@ -1,32 +1,45 @@
 extends Node2D
 
+onready var leader_start = $LeaderStart
+
 export var cargo_ship: PackedScene
 export var attack_ship: PackedScene
 export var player: PackedScene
 export var ui: PackedScene
 
-var n_cargo_ship
+var n_cargo_ship: Node2D
 var n_attack_ships = []
-var n_player
-var n_ui
+var n_player: Node2D
+var n_ui: CanvasLayer
 
+var start_position = Vector2(2000, 2000)
+var end_position = Vector2(-5000, -5000)
 
 func _ready() -> void:
 		
-	n_ui = ui.instance()
-	add_child(n_ui)
-	
-	n_player = player.instance()
-	add_child(n_player)
+#	n_ui = ui.instance()
+#	add_child(n_ui)
+#
+#	n_player = player.instance()
+#	add_child(n_player)
 	
 	n_cargo_ship = cargo_ship.instance()
-	n_cargo_ship.end = Position2D.new()
-	n_cargo_ship.end.global_position = Vector2.ZERO
+	n_cargo_ship.global_position = leader_start.get_leader_position()
+	var n_end_position = Position2D.new()
+	n_end_position.global_position = end_position
+	n_cargo_ship.end = n_end_position
 	add_child(n_cargo_ship)
+	add_child(n_end_position)
+	var camera2d = Camera2D.new()
+	camera2d.current = true
+	n_cargo_ship.add_child(camera2d)
 	
-	for i in range(2):
+	var followers_poisition = leader_start.get_follower_position()
+	
+	for i in range(3):
 		var new_attack_ship = attack_ship.instance()
 		n_attack_ships.append(new_attack_ship)
+		new_attack_ship.global_position = followers_poisition[i]
 		add_child(new_attack_ship)
 	
 	

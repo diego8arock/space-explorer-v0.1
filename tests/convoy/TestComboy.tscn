@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://tests/convoy/TestComboy.gd" type="Script" id=1]
 [ext_resource path="res://entities/enemies/attack_ship/AttackShip.tscn" type="PackedScene" id=2]
 [ext_resource path="res://entities/enemies/cargo _ship/CargoShip.tscn" type="PackedScene" id=3]
 [ext_resource path="res://tests/ui/TestUI.tscn" type="PackedScene" id=4]
 [ext_resource path="res://entities/player/Player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://modules/leader_start/LeaderStart.tscn" type="PackedScene" id=6]
 
 [node name="TestComboy" type="Node2D"]
 script = ExtResource( 1 )
@@ -12,3 +13,6 @@ cargo_ship = ExtResource( 3 )
 attack_ship = ExtResource( 2 )
 player = ExtResource( 5 )
 ui = ExtResource( 4 )
+
+[node name="LeaderStart" parent="." instance=ExtResource( 6 )]
+position = Vector2( 5000, 5000 )
