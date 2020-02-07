@@ -17,6 +17,7 @@ var m_attack_groups = [Groups.PLAYER, Groups.ALLY]
 var m_velocity: Vector2
 var m_target
 var m_crowd = []
+
 signal died(object)
 
 func _ready() -> void:
@@ -33,7 +34,6 @@ func _ready() -> void:
 	n_aim_target.target_not_detected()
 	n_health.set_health(n_stats.health)
 	m_target = Functions.get_objects_from_groups([Groups.LEADER, Groups.ENEMY])[0]
-	global_position = m_target.global_position	
 
 func _physics_process(delta: float) -> void:
 	
@@ -55,10 +55,10 @@ func _physics_process(delta: float) -> void:
 		n_stats.separation_radius,
 		n_stats.max_separation
 	)	
-		
+
 	move_and_slide(m_velocity)
 	global_rotation = n_steering.rotate_to(m_velocity, global_rotation, delta, n_stats.rotation_speed)
-		
+
 func take_damage(damage: float) -> void:
 	
 	Debug.do(name, "damage", damage)
