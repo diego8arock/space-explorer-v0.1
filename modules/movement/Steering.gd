@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 class_name Steering
 
 const DEFAULT_MASS: float = 2.0
@@ -11,6 +11,12 @@ const DEFAULT_SEPARATION_RADIUS: float = 10.0
 const DEFAULT_MAX_SEPARATION: float = 10.0
 
 var wander_angle: float = 0.0
+
+var m_draw_seperation_radius
+var m_draw_arrival_distance
+var m_draw_follow_distance
+var m_draw_max_separation
+var m_drawn_behind_position
 
 func steer(velocity: Vector2, max_force: = DEFAULT_MAX_FORCE, mass: = DEFAULT_MASS) -> Vector2:
 
@@ -55,6 +61,7 @@ func arrive(
 		arrival_distance: float = DEFAULT_ARRIVAL_DISTANCE
 	) -> Vector2:
 	
+	m_draw_arrival_distance = arrival_distance
 	var desired_velocity = target_position - global_position
 	var distance = desired_velocity.length()
 	if distance < arrival_distance:
@@ -144,9 +151,13 @@ func follow(
 		max_separation: float = DEFAULT_MAX_SEPARATION	
 	) -> Vector2:
 	
+	m_draw_seperation_radius = separtion_radius
+	m_draw_follow_distance = follow_distance
+	m_draw_max_separation = max_separation	
 	var tv: Vector2 = target_velocity * -1
 	tv = tv.normalized() * follow_distance
 	var behind_position = target_position + tv
+	m_drawn_behind_position = behind_position
 	var steering = arrive(velocity, behind_position, global_position, max_velocity_speed, max_force, mass, arrival_distance)
 	steering += separation(crowd, entity, separtion_radius, max_separation)
 	
@@ -187,3 +198,20 @@ func rotate_to(
 	
 	var current_direction = Vector2.RIGHT.rotated(global_rotation)
 	return current_direction.normalized().slerp(velocity.normalized(), rotation_speed * delta).angle()
+
+func _draw() -> void:
+	
+	if m_draw_seperation_radius:
+		draw_arc(Vector2.ZERO, m_draw_seperation_radius, deg2rad(0), deg2rad(360), 50, Color(1,1,1))
+	if m_draw_follow_distance:
+		draw_line(Vector2.ZERO, Vector2(m_draw_follow_distance,5), Color(0,1,0), 5.0)
+	if m_draw_arrival_distance:
+		draw_line(Vector2.ZERO, Vector2(m_draw_arrival_distance,-5), Color(0,0,1), 5.0)
+	if m_draw_max_separation:
+		draw_line(Vector2.ZERO, Vector2(0,m_draw_max_separation), Color(1,0,0), 5.0)
+	if m_drawn_behind_position:
+		draw_circle(to_local(m_drawn_behind_position), 10, Color(1,0,1))
+
+func _process(delta: float) -> void:
+	
+	update()
