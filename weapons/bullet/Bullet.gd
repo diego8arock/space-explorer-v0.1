@@ -48,7 +48,7 @@ func _on_HomingTimer_timeout() -> void:
 	m_is_homing = false
 	
 	
-func on_Target_died() -> void:
+func on_Target_died(object) -> void:
 	
 	m_is_homing = false
 
