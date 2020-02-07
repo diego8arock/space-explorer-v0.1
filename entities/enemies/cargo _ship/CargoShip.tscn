@@ -13,6 +13,8 @@
 [ext_resource path="res://modules/select_area/SelectArea.tscn" type="PackedScene" id=11]
 
 [node name="CargoShip" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 45
 script = ExtResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="."]
