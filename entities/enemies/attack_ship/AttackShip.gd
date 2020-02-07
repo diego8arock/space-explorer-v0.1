@@ -74,9 +74,9 @@ func safe_delete() -> void:
 	Debug.do(name, "safe_delete", "called")
 	call_deferred("free")
 	
-func taget_detected() -> void:
+func target_detected() -> void:
 	
-	n_aim_target.taget_detected()
+	n_aim_target.target_detected()
 	
 func target_not_detected() -> void:
 	
