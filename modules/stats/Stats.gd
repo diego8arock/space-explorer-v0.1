@@ -3,6 +3,20 @@ extends Node
 export var attributes: Resource
 export var movement: Resource
 
+#attributes
+var health: float 
+var damage: float 
+
+#movement
+var max_speed: float
+var mass: float
+var max_force: float 
+var rotation_speed: float
+var arrival_distance : float
+var follow_distance: float
+var separation_radius : float
+var max_separation: float
+
 func _ready() -> void:
 	
 	assert(attributes)
@@ -18,19 +32,5 @@ func _ready() -> void:
 	arrival_distance  = movement.arrival_distance
 	follow_distance = movement.follow_distance
 	separation_radius  = movement.separation_radius
-	max_separation = movement.max_separation
-		
+	max_separation = movement.max_separation	
 
-#attributes
-var health: float 
-var damage: float 
-
-#movement
-var max_speed: float
-var mass: float
-var max_force: float 
-var rotation_speed: float
-var arrival_distance : float
-var follow_distance: float
-var separation_radius : float
-var max_separation: float
