@@ -57,12 +57,12 @@ func target_detected() -> void:
 	
 	if Functions.is_object_in_any_group(m_body_entered, em_attack_groups):
 		
-		assert (m_body_entered.has_method("taget_detected"))
+		assert (m_body_entered.has_method("target_detected"))
 		assert (m_body_entered.has_method("target_not_detected"))
 		assert (m_body_entered.has_method("target_aimed"))
 		
 		m_targets.append(m_body_entered)
-		m_body_entered.taget_detected()
+		m_body_entered.target_detected()
 		acquire_target()
 		
 func target_lost() -> void:
@@ -108,7 +108,7 @@ func force_set_target(body) -> void:
 	Debug.do(name, "force_set_target", "called")
 	if m_targets.has(body):
 		if m_target:
-			m_target.taget_detected()
+			m_target.target_detected()
 		set_target(body)
 
 #Events
