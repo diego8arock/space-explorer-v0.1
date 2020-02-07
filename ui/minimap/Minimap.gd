@@ -14,6 +14,7 @@ var out_of_range: float = 1000.0
 var active_target
 
 var enemies = {}
+var enemies_dead = []
 
 func _ready() -> void:
 	
@@ -43,10 +44,10 @@ func get_all_enemies() -> void:
 	
 	var enemies_group = get_tree().get_nodes_in_group(Groups.ENEMY)
 	for e in enemies_group:
-		if not enemies.has(e):
+		if not enemies.has(e) and not enemies_dead.has(e):
 			var sprite = enemy_indicator.instance()
 			enemies[e] = sprite
-			e.connect("died", self, "on_Enemy_died")			
+			assert(e.connect("died", self, "on_Enemy_died") == 0)		
 			enemies_container.add_child(sprite)
 			sprite.set_red_dot()
 	
@@ -90,6 +91,7 @@ func set_enemy_sprite(enemy, indicator) -> void:
 func on_Enemy_died(object) -> void:
 	
 	enemies.erase(object)
+	enemies_dead.append(object)
 	
 func on_Player_global_values(g_position, g_rotation) -> void:
 	
