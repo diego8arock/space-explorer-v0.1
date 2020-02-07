@@ -8,7 +8,7 @@ func target_not_detected() -> void:
 	aimed.visible = false
 	detected.visible = false
 
-func taget_detected() -> void:
+func target_detected() -> void:
 	
 	detected.visible = true
 	aimed.visible = false
