@@ -25,7 +25,7 @@ func _ready() -> void:
 	Debug.add(name, debug)
 	add_to_group(Groups.PLAYER)
 	auto_gun.set_attack_groups([Groups.ENEMY])
-	auto_gun.set_damage(5)
+	auto_gun.set_damage(1)
 	auto_gun_control.set_attack_range(attack_range)
 	auto_gun.set_fire_rate(fire_rate)
 	auto_gun.set_spread_range(spread_range)
