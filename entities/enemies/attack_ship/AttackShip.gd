@@ -3,6 +3,9 @@ extends KinematicBody2D
 #Export
 export var debug: bool = false
 export var bullet: PackedScene
+#debug
+var d_draw_attack_range
+var d_draw_follow_range
 #OnReady
 onready var n_muzzle_left = $Muzzles/MuzzleLeft
 onready var n_muzzle_right = $Muzzles/MuzzleRight
@@ -11,12 +14,18 @@ onready var n_fire_rate = $FireRate
 onready var n_collider = $CollisionPolygon2D
 onready var n_aim_target = $AimTarget
 onready var n_steering = $Steering
-onready var n_stats = $Stats
+onready var n_stats = $NPCStats
+onready var n_movement = $Movement
 #Members
 var m_attack_groups = [Groups.PLAYER, Groups.ALLY]
 var m_velocity: Vector2
-var m_target
+var m_target: Node2D
 var m_crowd = []
+var m_leader: Node2D
+var m_rotation_speed: float
+#Enum
+enum STATE {IDLE, FOLLOW_LEADER, ARRIVE_AT_TARGET, PURSUIT_TARGET}
+var m_current_state = STATE.IDLE
 
 signal died(object)
 
@@ -33,31 +42,90 @@ func _ready() -> void:
 	n_muzzle_right.set_bullet(bullet)
 	n_aim_target.target_not_detected()
 	n_health.set_health(n_stats.health)
-	m_target = Functions.get_objects_from_groups([Groups.LEADER, Groups.ENEMY])[0]
+	m_leader = Functions.get_objects_from_groups([Groups.LEADER, Groups.ENEMY])[0]
+	m_current_state = STATE.FOLLOW_LEADER
+	
+	d_draw_attack_range = $AttackRange/CollisionShape2D.shape.radius
+	d_draw_follow_range = $FollowRange/CollisionShape2D.shape.radius
+	
+func _draw() -> void:
+	
+	if d_draw_follow_range:
+		draw_arc(Vector2.ZERO, d_draw_follow_range, deg2rad(0), deg2rad(360), 50, Color(0.9,0.7,0))
+	if d_draw_attack_range:
+		draw_arc(Vector2.ZERO, d_draw_attack_range, deg2rad(0), deg2rad(360), 50, Color(1,0,0))
+		
+func _process(_delta: float) -> void:
+	
+	update()
 
 func _physics_process(delta: float) -> void:
+	
+	Debug.do(name, "STATE", STATE.keys()[m_current_state])
+
+	match m_current_state:
+		STATE.IDLE:
+			pass
+		STATE.FOLLOW_LEADER:
+			follow_leader()
+		STATE.ARRIVE_AT_TARGET:
+			arrive_at_target()	
+		STATE.PURSUIT_TARGET:
+			pursuit_target()
+
+	move_and_slide(m_velocity)
+	global_rotation = n_steering.rotate_to(m_velocity, global_rotation, delta, m_rotation_speed)
+	
+func follow_leader() -> void:
 	
 	if m_crowd.size() == 0:
 		m_crowd = Functions.get_objects_from_groups([Groups.FOLLOWER, Groups.ENEMY])
 		
 	m_velocity = n_steering.follow(
 		m_velocity, 
-		m_target.velocity, 
-		m_target.global_position, 
+		m_leader.velocity, 
+		m_leader.global_position, 
 		global_position,
 		m_crowd,
 		self,
-		n_stats.max_speed,
-		n_stats.max_force,
-		n_stats.mass,
-		n_stats.arrival_distance,
-		n_stats.follow_distance,
-		n_stats.separation_radius,
-		n_stats.max_separation
-	)	
-
-	move_and_slide(m_velocity)
-	global_rotation = n_steering.rotate_to(m_velocity, global_rotation, delta, n_stats.rotation_speed)
+		n_movement.follow_leader.max_speed,
+		n_movement.follow_leader.max_force,
+		n_movement.follow_leader.mass,
+		n_movement.follow_leader.arrival_distance,
+		n_movement.follow_leader.follow_distance,
+		n_movement.follow_leader.separation_radius,
+		n_movement.follow_leader.max_separation
+	)
+	
+	m_rotation_speed = n_movement.follow_leader.rotation_speed
+	
+func arrive_at_target() -> void:
+	
+	m_velocity = n_steering.arrive(		
+		m_velocity, 
+		m_target.global_position, 
+		global_position,
+		n_movement.arrive_at_target.max_speed,
+		n_movement.arrive_at_target.max_force,
+		n_movement.arrive_at_target.mass,
+		n_movement.arrive_at_target.arrival_distance
+		)
+		
+	m_rotation_speed = n_movement.arrive_at_target.rotation_speed
+		
+func pursuit_target() -> void:
+	
+	m_velocity = n_steering.pursuit(		
+		m_velocity, 
+		m_target.get_velocity(),
+		m_target.global_position, 
+		global_position,
+		n_movement.pursuit_target.max_speed,
+		n_movement.pursuit_target.max_force,
+		n_movement.pursuit_target.mass
+		)
+		
+	m_rotation_speed = n_movement.pursuit_target.rotation_speed
 
 func take_damage(damage: float) -> void:
 	
@@ -96,7 +164,28 @@ func _on_SelectArea_input_event(_viewport: Node, event: InputEvent, _shape_idx: 
 	if event is InputEventScreenTouch:
 		Events.emit_signal("target_selected", self)
 		Debug.do(name, "_on_SelectArea_input_event", "touch")
-		
 
+func _on_FollowRange_body_entered(body):
+	
+	if body.is_in_group(Groups.PLAYER) and not m_current_state == STATE.PURSUIT_TARGET:		
+		m_target = body
+		m_current_state = STATE.ARRIVE_AT_TARGET
 
+func _on_AttackRange_body_entered(body: Node2D):
+	
+	if body.is_in_group(Groups.PLAYER):	
+		assert(body.has_method("get_velocity"))	
+		m_target = body
+		m_current_state = STATE.PURSUIT_TARGET
+		n_fire_rate.start()
 
+func _on_AttackRange_body_exited(body: Node) -> void:
+	
+	if body == m_target:
+		m_current_state = STATE.FOLLOW_LEADER
+
+func _on_FollowRange_body_exited(body: Node) -> void:
+	
+	if body == m_target:
+		m_target = null
+		m_current_state = STATE.FOLLOW_LEADER

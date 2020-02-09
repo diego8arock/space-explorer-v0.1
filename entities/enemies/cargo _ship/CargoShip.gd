@@ -6,6 +6,7 @@ onready var steering = $Steering
 onready var n_stats = $Stats
 onready var n_aim_target = $AimTarget
 onready var n_collider = $CollisionPolygon2D
+onready var n_movement = $Movement
 
 var start: Position2D
 var end: Position2D
@@ -28,14 +29,14 @@ func _physics_process(delta: float) -> void:
 		velocity, 
 		end.global_position, 
 		global_position,
-		n_stats.max_speed,
-		n_stats.max_force,
-		n_stats.mass,
-		n_stats.arrival_distance)
+		n_movement.arrive_at_target.max_speed,
+		n_movement.arrive_at_target.max_force,
+		n_movement.arrive_at_target.mass,
+		n_movement.arrive_at_target.arrival_distance)
 	
 	Debug.do(name,"velocity", velocity)
 	move_and_slide(velocity)
-	global_rotation = steering.rotate_to(velocity, global_rotation, delta)
+	global_rotation = steering.rotate_to(velocity, global_rotation, delta, n_movement.arrive_at_target.rotation_speed)
 
 func died() -> void:
 	

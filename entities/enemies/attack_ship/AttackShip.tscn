@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://entities/enemies/attack_ship/AttackShip.gd" type="Script" id=1]
 [ext_resource path="res://entities/enemies/attack_ship/assets/enemyBlack1.png" type="Texture" id=2]
@@ -7,10 +7,13 @@
 [ext_resource path="res://weapons/muzzle/Muzzle.tscn" type="PackedScene" id=5]
 [ext_resource path="res://weapons/bullet/EnemyBullet.tscn" type="PackedScene" id=6]
 [ext_resource path="res://modules/aim_target/AimTarget.tscn" type="PackedScene" id=7]
-[ext_resource path="res://modules/stats/Stats.tscn" type="PackedScene" id=8]
+[ext_resource path="res://modules/stats/NPCAttributes.tscn" type="PackedScene" id=8]
 [ext_resource path="res://stats/attributes/AttackShipAttributes.tres" type="Resource" id=9]
-[ext_resource path="res://stats/movement/AttackShipMovement.tres" type="Resource" id=10]
+[ext_resource path="res://modules/movement/actions/Movement.tscn" type="PackedScene" id=10]
 [ext_resource path="res://modules/select_area/SelectArea.tscn" type="PackedScene" id=11]
+[ext_resource path="res://modules/movement/actions/FollowLeader.tscn" type="PackedScene" id=12]
+[ext_resource path="res://modules/movement/actions/PursuitTarget.tscn" type="PackedScene" id=13]
+[ext_resource path="res://modules/movement/actions/ArriveAtTarget.tscn" type="PackedScene" id=14]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 200.0
@@ -36,11 +39,36 @@ polygon = PoolVector2Array( -16.8184, -46.3633, 39.309, -24.9588, 36.6929, -10.6
 
 [node name="Health" parent="." instance=ExtResource( 4 )]
 
-[node name="Stats" parent="." instance=ExtResource( 8 )]
+[node name="NPCStats" parent="." instance=ExtResource( 8 )]
 attributes = ExtResource( 9 )
-movement = ExtResource( 10 )
+
+[node name="Movement" parent="." instance=ExtResource( 10 )]
+
+[node name="FollowLeader" parent="Movement" instance=ExtResource( 12 )]
+max_speed = 265.0
+mass = 2.0
+max_force = 10.0
+rotation_speed = 10.0
+arrival_distance = 100.0
+follow_distance = 100.0
+separation_radius = 50.0
+max_separation = 1.5
+
+[node name="ArriveAtTarget" parent="Movement" instance=ExtResource( 14 )]
+max_speed = 280.0
+mass = 2.0
+max_force = 10.0
+rotation_speed = 10.0
+arrival_distance = 100.0
+
+[node name="PursuitTarget" parent="Movement" instance=ExtResource( 13 )]
+max_speed = 300.0
+mass = 2.0
+max_force = 10.0
+rotation_speed = 10.0
 
 [node name="Muzzles" type="Node2D" parent="."]
+scale = Vector2( 0.5, 0.5 )
 
 [node name="MuzzleLeft" parent="Muzzles" instance=ExtResource( 5 )]
 position = Vector2( 45, -15 )
@@ -53,13 +81,11 @@ rotation = -0.00872665
 [node name="FireRate" type="Timer" parent="."]
 
 [node name="AttackRange" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRange"]
 shape = SubResource( 1 )
 
 [node name="FollowRange" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="FollowRange"]
 shape = SubResource( 2 )
@@ -69,3 +95,8 @@ shape = SubResource( 2 )
 [node name="AimTarget" parent="." instance=ExtResource( 7 )]
 scale = Vector2( 0.1, 0.1 )
 [connection signal="timeout" from="FireRate" to="." method="_on_FireRate_timeout"]
+[connection signal="body_entered" from="AttackRange" to="." method="_on_AttackRange_body_entered"]
+[connection signal="body_exited" from="AttackRange" to="." method="_on_AttackRange_body_exited"]
+[connection signal="body_entered" from="FollowRange" to="." method="_on_FollowRange_body_entered"]
+[connection signal="body_exited" from="FollowRange" to="." method="_on_FollowRange_body_exited"]
+[connection signal="input_event" from="SelectArea" to="." method="_on_SelectArea_input_event"]
