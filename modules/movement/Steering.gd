@@ -1,6 +1,8 @@
 extends Node2D
 class_name Steering
 
+export var debug = false
+
 const DEFAULT_MASS: float = 2.0
 const DEFAULT_MAX_VELOCITY_SPEED: float = 1.0
 const DEFAULT_MAX_FORCE: float = 1.0
@@ -16,7 +18,10 @@ var m_draw_seperation_radius
 var m_draw_arrival_distance
 var m_draw_follow_distance
 var m_draw_max_separation
-var m_drawn_behind_position
+var m_draw_behind_position
+var m_draw_future_target_position
+var m_draw_seeking
+var m_draw_steering
 
 func steer(velocity: Vector2, max_force: = DEFAULT_MAX_FORCE, mass: = DEFAULT_MASS) -> Vector2:
 
@@ -28,33 +33,33 @@ func steer(velocity: Vector2, max_force: = DEFAULT_MAX_FORCE, mass: = DEFAULT_MA
 func seek(
 		velocity: Vector2, 
 		target_position: Vector2, 
-		global_position: Vector2, 
+		p_global_position: Vector2, 
 		max_velocity_speed: float = DEFAULT_MAX_VELOCITY_SPEED, 
 		max_force: float = DEFAULT_MAX_FORCE, 
 		mass: float = DEFAULT_MASS
 	) -> Vector2:
 
-	var desired_velocity = (target_position - global_position).normalized() * max_velocity_speed
+	var desired_velocity = (target_position - p_global_position).normalized() * max_velocity_speed
 	var steering = steer(desired_velocity - velocity, max_force, mass)
 	return (velocity + steering).clamped(max_velocity_speed)
 	
 func flee(
 		velocity: Vector2, 
 		target_position: Vector2, 
-		global_position: Vector2, 
+		p_global_position: Vector2, 
 		max_velocity_speed: float = DEFAULT_MAX_VELOCITY_SPEED, 
 		max_force: float = DEFAULT_MAX_FORCE, 
 		mass: float = DEFAULT_MASS
 	) -> Vector2:
 
-	var desired_velocity = (global_position - target_position).normalized() * max_velocity_speed
+	var desired_velocity = (p_global_position - target_position).normalized() * max_velocity_speed
 	var steering = steer(desired_velocity - velocity, max_force, mass)
 	return (velocity + steering).clamped(max_velocity_speed)
 	
 func arrive(		
 		velocity: Vector2, 
 		target_position: Vector2, 
-		global_position: Vector2, 
+		p_global_position: Vector2, 
 		max_velocity_speed: float = DEFAULT_MAX_VELOCITY_SPEED, 
 		max_force: float = DEFAULT_MAX_FORCE, 
 		mass: float = DEFAULT_MASS,
@@ -62,7 +67,7 @@ func arrive(
 	) -> Vector2:
 	
 	m_draw_arrival_distance = arrival_distance
-	var desired_velocity = target_position - global_position
+	var desired_velocity = target_position - p_global_position
 	var distance = desired_velocity.length()
 	if distance < arrival_distance:
 		desired_velocity = desired_velocity.normalized() * max_velocity_speed * (distance / arrival_distance)
@@ -75,35 +80,32 @@ func pursuit(
 		velocity: Vector2, 
 		target_velocity: Vector2,
 		target_position: Vector2, 
-		global_position: Vector2, 
+		p_global_position: Vector2, 
 		max_velocity_speed: float = DEFAULT_MAX_VELOCITY_SPEED, 
 		max_force: float = DEFAULT_MAX_FORCE, 
 		mass: float = DEFAULT_MASS
 	) -> Vector2:
 
-	var distance = target_position - global_position
+	var distance = target_position - p_global_position
 	var T = distance.length() / max_velocity_speed
 	var future_position = target_position + target_velocity * T
-	var seeking = seek(velocity, future_position, global_position, max_velocity_speed, max_force, mass)
-	var steering = steer(seeking, max_force, mass)
-	return (velocity + steering).clamped(max_velocity_speed)
+	m_draw_future_target_position = future_position
+	return seek(velocity, future_position, p_global_position, max_velocity_speed, max_force, mass)
 	
 func evade(
 		velocity: Vector2, 
 		target_velocity: Vector2,
 		target_position: Vector2, 
-		global_position: Vector2, 
+		p_global_position: Vector2, 
 		max_velocity_speed: float = DEFAULT_MAX_VELOCITY_SPEED, 
 		max_force: float = DEFAULT_MAX_FORCE, 
 		mass: float = DEFAULT_MASS
 	) -> Vector2:
 
-	var distance = target_position - global_position
+	var distance = target_position - p_global_position
 	var T = distance.length() / max_velocity_speed
 	var future_position = target_position + target_velocity * T
-	var fleeing = flee(future_position, target_position, global_position, max_velocity_speed, max_force, mass)
-	var steering = steer(fleeing, max_force, mass)
-	return (velocity + steering).clamped(max_velocity_speed)
+	return flee(velocity, future_position, p_global_position, max_velocity_speed, max_force, mass)
 
 func wander(
 		velocity: Vector2, 
@@ -139,7 +141,7 @@ func follow(
 		velocity: Vector2, 
 		target_velocity: Vector2, 
 		target_position: Vector2, 
-		global_position: Vector2,
+		p_global_position: Vector2,
 		crowd, #array
 		entity, #body
 		max_velocity_speed: float = DEFAULT_MAX_VELOCITY_SPEED, 
@@ -157,8 +159,8 @@ func follow(
 	var tv: Vector2 = target_velocity * -1
 	tv = tv.normalized() * follow_distance
 	var behind_position = target_position + tv
-	m_drawn_behind_position = behind_position
-	var steering = arrive(velocity, behind_position, global_position, max_velocity_speed, max_force, mass, arrival_distance)
+	m_draw_behind_position = behind_position	
+	var steering = arrive(velocity, behind_position, p_global_position, max_velocity_speed, max_force, mass, arrival_distance)
 	steering += separation(crowd, entity, separtion_radius, max_separation)
 	
 	return steering
@@ -184,9 +186,8 @@ func separation(
 		force.y /= neighbor_count
 		force *= -1
 		
-	force = force.normalized()
-	force *= max_separation
-	
+	force = force.normalized() * max_separation
+
 	return force
 	
 func rotate_to(
@@ -201,17 +202,23 @@ func rotate_to(
 
 func _draw() -> void:
 	
-	if m_draw_seperation_radius:
-		draw_arc(Vector2.ZERO, m_draw_seperation_radius, deg2rad(0), deg2rad(360), 50, Color(1,1,1))
-	if m_draw_follow_distance:
-		draw_line(Vector2.ZERO, Vector2(m_draw_follow_distance,5), Color(0,1,0), 5.0)
-	if m_draw_arrival_distance:
-		draw_line(Vector2.ZERO, Vector2(m_draw_arrival_distance,-5), Color(0,0,1), 5.0)
-	if m_draw_max_separation:
-		draw_line(Vector2.ZERO, Vector2(0,m_draw_max_separation), Color(1,0,0), 5.0)
-	if m_drawn_behind_position:
-		draw_circle(to_local(m_drawn_behind_position), 10, Color(1,0,1))
+	if debug:
+		if m_draw_seperation_radius:
+			draw_arc(Vector2.ZERO, m_draw_seperation_radius, deg2rad(0), deg2rad(360), 50, Color(1,1,1))
+		if m_draw_follow_distance:
+			draw_line(Vector2.ZERO, Vector2(m_draw_follow_distance,5), Color(0,1,0), 5.0)
+		if m_draw_arrival_distance:
+			draw_line(Vector2.ZERO, Vector2(m_draw_arrival_distance,-5), Color(0,0,1), 5.0)
+		if m_draw_max_separation:
+			draw_line(Vector2.ZERO, Vector2(0,m_draw_max_separation), Color(1,0,0), 5.0)
+		if m_draw_behind_position:
+			draw_circle(to_local(m_draw_behind_position), 10, Color(1,0,1))
+		if m_draw_future_target_position:
+			draw_circle(to_local(m_draw_future_target_position), 10, Color(0,1,1))
+		if m_draw_seeking:
+			draw_circle(to_local(m_draw_seeking), 10, Color(0.25,0.25,0.25))
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
-	update()
+	if debug:
+		update()
