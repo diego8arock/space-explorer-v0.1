@@ -15,4 +15,4 @@ player = ExtResource( 5 )
 ui = ExtResource( 4 )
 
 [node name="LeaderStart" parent="." instance=ExtResource( 6 )]
-position = Vector2( 5000, 5000 )
+position = Vector2( 3000, 3000 )
