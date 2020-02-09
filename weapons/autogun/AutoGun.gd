@@ -127,7 +127,7 @@ func _on_AttackRange_body_exited(body: PhysicsBody2D) -> void:
 	m_body_exited = body
 	target_lost()
 	
-func on_Target_died(object) -> void:
+func on_Target_died(_object) -> void:
 	
 	remove_target()	
 			
