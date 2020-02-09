@@ -2,8 +2,8 @@ extends KinematicBody2D
 
 export var debug = false
 
-onready var auto_gun_control = $AutoGun
-onready var auto_gun = $AutoGun/Pivot
+onready var auto_gun_control = $AutoGunPlayer
+onready var auto_gun = $AutoGunPlayer/Pivot
 onready var health = $Health
 
 var max_speed = 400
@@ -11,7 +11,7 @@ var min_speed = 100
 var aceleration = 10.0
 var breaking = 5.0
 var speed: float = 0
-var velocity: Vector2
+var m_velocity: Vector2 setget , get_velocity
 var rotation_speed = 15.0
 var attack_range = 400.0
 var fire_rate = 0.3
@@ -42,16 +42,16 @@ func _physics_process(delta: float) -> void:
 	else:
 		speed -= breaking if speed > min_speed else 0
 	
-	move_and_slide(velocity * speed)
+	move_and_slide(m_velocity * speed)
 	var current_direction = Vector2.RIGHT.rotated(global_rotation)
-	global_rotation = current_direction.normalized().slerp(velocity.normalized(), rotation_speed * delta).angle()
+	global_rotation = current_direction.normalized().slerp(m_velocity.normalized(), rotation_speed * delta).angle()
 	Events.emit_signal("player_global_values", global_position, global_rotation)
 		
 func move_player(value) -> void:
 	
 	moving = true
-	velocity = velocity.normalized().linear_interpolate(value.normalized(), 0.25)
-	Debug.do(name, "velocity", velocity)
+	m_velocity = m_velocity.normalized().linear_interpolate(value.normalized(), 0.25)
+	Debug.do(name, "velocity", m_velocity)
 	
 func stop_player() -> void:
 	
@@ -60,6 +60,10 @@ func stop_player() -> void:
 func target_selected(body) -> void:
 	
 	auto_gun.force_set_target(body)
+	
+func get_velocity() -> Vector2:
+	
+	return m_velocity * speed
 	
 func safe_delete() -> void:
 	pass
