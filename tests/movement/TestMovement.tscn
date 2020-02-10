@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://tests/movement/MovementTool.tscn" type="PackedScene" id=1]
+[ext_resource path="res://tests/movement/UnitMoveTest.tscn" type="PackedScene" id=2]
+[ext_resource path="res://tests/movement/TestMovement.gd" type="Script" id=3]
+[ext_resource path="res://tests/quit/TestQuit.tscn" type="PackedScene" id=4]
+
+[node name="TestMovement" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TestQuit" parent="CanvasLayer" instance=ExtResource( 4 )]
+
+[node name="MovementTool" parent="CanvasLayer" instance=ExtResource( 1 )]
+anchor_right = 0.157
+anchor_bottom = 0.126
+margin_right = -0.440002
+margin_bottom = -0.0800018
+
+[node name="UnitMoveTest" parent="." instance=ExtResource( 2 )]
+position = Vector2( 681.071, 549.251 )
+scale = Vector2( 0.5, 0.5 )
+[connection signal="target_changed" from="." to="UnitMoveTest" method="_on_TestMovement_target_changed"]
+[connection signal="force_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_force_changed"]
+[connection signal="mass_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_mass_changed"]
+[connection signal="option_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_option_changed"]
+[connection signal="rotation_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_rotation_changed"]
+[connection signal="speed_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_speed_changed"]
