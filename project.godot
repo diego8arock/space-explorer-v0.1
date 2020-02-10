@@ -45,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="space-explorer-v0.1"
-run/main_scene="res://tests/convoy/TestComboy.tscn"
+run/main_scene="res://tests/movement/TestMovement.tscn"
 config/icon="res://icon.png"
 
 [autoload]
