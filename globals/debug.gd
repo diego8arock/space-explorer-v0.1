@@ -14,16 +14,18 @@ func _ready() -> void:
 	var children_count = get_tree().root.get_child_count()
 	var children = get_tree().root.get_children()
 	node = children[children_count - 1] #usually the main scene node
+	insert_debug()
 		
 func insert_debug() -> void:
 	
 	if node.has_node("CanvasLayer"):
 		node = node.get_node("CanvasLayer")
+	if node.has_node("UI"):
+		node = node.get_node("UI")
 	node.add_child(status)
 	if show_debug_ui:
 		show_debug()
 	
-
 func _input(event: InputEvent) -> void:
 	
 	if event is InputEventKey and event.is_action_pressed("debug"):		
