@@ -20,8 +20,9 @@ var m_draw_follow_distance
 var m_draw_max_separation
 var m_draw_behind_position
 var m_draw_future_target_position
-var m_draw_seeking
-var m_draw_steering
+var m_draw_circle_radius
+var m_draw_circle_center
+var m_draw_wander_force
 
 func steer(velocity: Vector2, max_force: = DEFAULT_MAX_FORCE, mass: = DEFAULT_MASS) -> Vector2:
 
@@ -134,6 +135,10 @@ func wander(
 
 	var wander_force: Vector2 = circle_center + displacement
 	
+	m_draw_circle_radius = circle_radius
+	m_draw_circle_center = circle_center
+	m_draw_wander_force = wander_force
+	
 	var steering = steer(wander_force, max_force, mass)
 	return (velocity + steering).clamped(max_velocity_speed)	
 	
@@ -215,8 +220,10 @@ func _draw() -> void:
 			draw_circle(to_local(m_draw_behind_position), 10, Color(1,0,1))
 		if m_draw_future_target_position:
 			draw_circle(to_local(m_draw_future_target_position), 10, Color(0,1,1))
-		if m_draw_seeking:
-			draw_circle(to_local(m_draw_seeking), 10, Color(0.25,0.25,0.25))
+		if m_draw_circle_radius and m_draw_circle_center:
+			draw_arc(m_draw_circle_center, m_draw_circle_radius, deg2rad(0), deg2rad(360), 50, Color(1,1,1))
+		if m_draw_wander_force:
+			draw_line(Vector2.ZERO, m_draw_wander_force, Color(1,0.7,0.5), 5.0)
 
 func _process(_delta: float) -> void:
 	
