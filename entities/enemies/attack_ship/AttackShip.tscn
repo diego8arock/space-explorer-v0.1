@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://entities/enemies/attack_ship/AttackShip.gd" type="Script" id=1]
 [ext_resource path="res://entities/enemies/attack_ship/assets/enemyBlack1.png" type="Texture" id=2]
@@ -8,18 +8,20 @@
 [ext_resource path="res://weapons/bullet/EnemyBullet.tscn" type="PackedScene" id=6]
 [ext_resource path="res://modules/aim_target/AimTarget.tscn" type="PackedScene" id=7]
 [ext_resource path="res://modules/stats/NPCAttributes.tscn" type="PackedScene" id=8]
-[ext_resource path="res://stats/attributes/AttackShipAttributes.tres" type="Resource" id=9]
+[ext_resource path="res://stats/npc/attributes/AttackShipAttributes.tres" type="Resource" id=9]
 [ext_resource path="res://modules/movement/actions/Movement.tscn" type="PackedScene" id=10]
 [ext_resource path="res://modules/select_area/SelectArea.tscn" type="PackedScene" id=11]
 [ext_resource path="res://modules/movement/actions/FollowLeader.tscn" type="PackedScene" id=12]
 [ext_resource path="res://modules/movement/actions/PursuitTarget.tscn" type="PackedScene" id=13]
 [ext_resource path="res://modules/movement/actions/ArriveAtTarget.tscn" type="PackedScene" id=14]
+[ext_resource path="res://modules/movement/actions/Wander.tscn" type="PackedScene" id=15]
+[ext_resource path="res://modules/movement/actions/Wander.gd" type="Script" id=16]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 200.0
+radius = 500.0
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 400.0
+radius = 1000.0
 
 [node name="AttackShip" type="KinematicBody2D"]
 collision_layer = 2
@@ -28,11 +30,9 @@ script = ExtResource( 1 )
 bullet = ExtResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-scale = Vector2( 0.5, 0.5 )
 polygon = PoolVector2Array( -16.8184, -46.3633, 39.309, -24.9588, 36.6929, -10.6891, 10.7696, -15.2079, 16.9532, -10.927, 16.2397, 12.1423, 10.7696, 17.1367, 35.2659, 9.76403, 40.7359, 24.0337, -14.4401, 45.4382, -40.839, 30.455, -33.942, 12.1423, -24.191, 9.05054, -23.2397, -9.26218, -33.4663, -10.927, -41.3146, -29.2397 )
 
 [node name="Steering" parent="." instance=ExtResource( 3 )]
@@ -67,8 +67,17 @@ mass = 2.0
 max_force = 10.0
 rotation_speed = 10.0
 
+[node name="Wander" parent="Movement" instance=ExtResource( 15 )]
+script = ExtResource( 16 )
+max_speed = 100.0
+mass = 2.0
+max_force = 10.0
+rotation_speed = 5.0
+cirlce_distance = 150.0
+circle_radius = 20.0
+angle_change = 25.0
+
 [node name="Muzzles" type="Node2D" parent="."]
-scale = Vector2( 0.5, 0.5 )
 
 [node name="MuzzleLeft" parent="Muzzles" instance=ExtResource( 5 )]
 position = Vector2( 45, -15 )
