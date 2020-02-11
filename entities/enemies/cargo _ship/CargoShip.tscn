@@ -9,9 +9,10 @@
 [ext_resource path="res://weapons/bullet/EnemyBullet.tscn" type="PackedScene" id=7]
 [ext_resource path="res://modules/stats/NPCAttributes.tscn" type="PackedScene" id=8]
 [ext_resource path="res://modules/movement/actions/Movement.tscn" type="PackedScene" id=9]
-[ext_resource path="res://stats/attributes/EnemyCargoShipAttributes.tres" type="Resource" id=10]
+[ext_resource path="res://stats/npc/attributes/EnemyCargoShipAttributes.tres" type="Resource" id=10]
 [ext_resource path="res://modules/select_area/SelectArea.tscn" type="PackedScene" id=11]
 [ext_resource path="res://modules/movement/actions/ArriveAtTarget.tscn" type="PackedScene" id=12]
+
 
 [node name="CargoShip" type="KinematicBody2D"]
 collision_layer = 2
