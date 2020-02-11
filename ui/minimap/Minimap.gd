@@ -23,8 +23,8 @@ func _ready() -> void:
 	var p2: Vector2 = line.points[1]
 	radius = p1.distance_to(p2) 
 	Events.connect("player_global_values", self, "on_Player_global_values")
-	Events.connect("joystick_moved", self, "move_player")
-	Events.connect("joystick_stopped", self, "stop_player")
+	Events.connect("joystick_moved", self, "on_Event_joystick_moved")
+	Events.connect("joystick_stopped", self, "on_Event_joystick_stopped")
 	Events.connect("player_auto_gun_set_target", self, "on_Player_auto_gun_set_target")
 	Events.connect("player_auto_gun_target_lost", self, "on_Player_auto_gun_target_lost")
 
@@ -33,11 +33,11 @@ func _process(delta: float) -> void:
 	get_all_enemies()
 	update_enemies_position(delta)
 
-func move_player(value) -> void:
+func on_Event_joystick_moved(value) -> void:
 	
 	velocity = velocity.normalized().linear_interpolate(value.normalized(), 0.25)
 	
-func stop_player() -> void:
+func on_Event_joystick_stopped() -> void:
 	pass	
 
 func get_all_enemies() -> void:
@@ -90,6 +90,7 @@ func set_enemy_sprite(enemy, indicator) -> void:
 		
 func on_Enemy_died(object) -> void:
 	
+	enemies[object].queue_free()
 	enemies.erase(object)
 	enemies_dead.append(object)
 	
