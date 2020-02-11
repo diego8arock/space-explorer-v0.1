@@ -12,6 +12,11 @@ func _ready() -> void:
 	
 	$Pivot.set_character(character)
 	$Pivot.set_bullet(bullet)
+	
+func _draw() -> void:
+	
+	if m_attack_range:
+		draw_arc(Vector2.ZERO, m_attack_range, deg2rad(0), deg2rad(360), 50, Color(0.9,0.7,0))
 
 func set_attack_range(attack_range: float) -> void:
 	
