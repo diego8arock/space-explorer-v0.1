@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scenes/combat_scene/CombatZone.gd" type="Script" id=1]
+[ext_resource path="res://scenes/combat_scene/EnemyContainer.gd" type="Script" id=2]
+[ext_resource path="res://scenes/combat_scene/CombatScene.gd" type="Script" id=3]
+
+[node name="CombatScene" type="Node2D"]
+script = ExtResource( 3 )
+debug = true
+
+[node name="CombatZone" type="Node2D" parent="."]
+script = ExtResource( 1 )
+
+[node name="EnemyContainer" type="Node" parent="."]
+script = ExtResource( 2 )
