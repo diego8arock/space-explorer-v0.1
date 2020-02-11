@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://entities/player/Player.gd" type="Script" id=1]
 [ext_resource path="res://entities/player/assets/playerShip1_orange.png" type="Texture" id=2]
 [ext_resource path="res://modules/health/Health.tscn" type="PackedScene" id=3]
+[ext_resource path="res://entities/player/Stats.gd" type="Script" id=4]
+[ext_resource path="res://stats/player/resources/PlayerStats.tres" type="Resource" id=5]
 [ext_resource path="res://entities/player/PlayerCamera.gd" type="Script" id=6]
 [ext_resource path="res://weapons/bullet/PlayerBullet.tscn" type="PackedScene" id=7]
 [ext_resource path="res://weapons/autogun/AutoGunPlayer.tscn" type="PackedScene" id=8]
@@ -12,27 +14,30 @@ collision_mask = 18
 script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-scale = Vector2( 0.5, 0.5 )
 polygon = PoolVector2Array( 37.6014, -7.8951, 37.6014, 6.79022, 11.9021, 12.3846, -0.685307, 34.4126, -0.860134, 38.9581, 7.007, 43.5035, 7.007, 50.1469, -24.2867, 45.9511, -25.1608, 42.6294, -21.4895, 40.3567, -27.6084, 13.958, -38.0979, 6.96504, -38.0979, -7.54545, -27.6084, -14.014, -20.965, -40.4126, -24.1119, -43.5594, -25.1608, -46.7063, 5.08393, -50.028, 7.18183, -44.7832, 0.713295, -40.4126, -2.60838, -35.5175, 11.7273, -12.2657 )
 
 [node name="Health" parent="." instance=ExtResource( 3 )]
 
+[node name="Stats" type="Node" parent="."]
+script = ExtResource( 4 )
+stats = ExtResource( 5 )
+
 [node name="AutoGunPlayer" parent="." instance=ExtResource( 8 )]
-position = Vector2( -11, 0 )
+position = Vector2( -22, 0 )
 bullet = ExtResource( 7 )
 
 [node name="Base" parent="AutoGunPlayer" index="0"]
-scale = Vector2( 0.2, 0.2 )
+scale = Vector2( 0.4, 0.4 )
 
 [node name="Gun" parent="AutoGunPlayer/Pivot" index="0"]
-scale = Vector2( 0.3, 0.3 )
+scale = Vector2( 0.6, 0.6 )
 
 [node name="PlayerCamera" type="Camera2D" parent="."]
 current = true
+zoom = Vector2( 2, 2 )
 smoothing_enabled = true
 smoothing_speed = 30.0
 drag_margin_left = 0.1
