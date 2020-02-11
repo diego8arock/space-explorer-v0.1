@@ -25,3 +25,7 @@ func is_mouse_over_tool(event: InputEvent) -> bool:
 	
 	var size = move_tool_margin.rect_size
 	return event.position.x <= size.x and event.position.y <= size.y
+
+
+func _on_MovementTool_follow_distance_changed(value) -> void:
+	pass # Replace with function body.

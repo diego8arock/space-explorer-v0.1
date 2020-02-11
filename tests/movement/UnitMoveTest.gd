@@ -8,6 +8,9 @@ var mass = 100.0
 var force = 100.0
 var arrival_distance = 100.0
 var rotation_speed = 1.0
+var follow_distance = 100.0
+var separation_radius = 10.0
+var max_separation = 10.0
 var m_target = null
 
 func _ready() -> void:
@@ -50,3 +53,19 @@ func _on_MovementTool_rotation_changed(value) -> void:
 func _on_TestMovement_target_changed(target) -> void:
 	
 	m_target = target
+
+func _on_MovementTool_arrival_distance_changed(value) -> void:
+	
+	arrival_distance = float(value)
+
+func _on_MovementTool_follow_distance_changed(value) -> void:
+	
+	follow_distance = float(value)
+
+func _on_MovementTool_separation_radius_changed(value) -> void:
+	
+	separation_radius = float(value)
+
+func _on_MovementTool_max_separation_radius_changed(value) -> void:
+	
+	max_separation = float(value)

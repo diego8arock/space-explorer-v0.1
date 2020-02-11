@@ -22,8 +22,12 @@ margin_bottom = -0.0800018
 position = Vector2( 681.071, 549.251 )
 scale = Vector2( 0.5, 0.5 )
 [connection signal="target_changed" from="." to="UnitMoveTest" method="_on_TestMovement_target_changed"]
+[connection signal="arrival_distance_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_arrival_distance_changed"]
+[connection signal="follow_distance_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_follow_distance_changed"]
 [connection signal="force_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_force_changed"]
 [connection signal="mass_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_mass_changed"]
+[connection signal="max_separation_radius_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_max_separation_radius_changed"]
 [connection signal="option_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_option_changed"]
 [connection signal="rotation_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_rotation_changed"]
+[connection signal="separation_radius_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_separation_radius_changed"]
 [connection signal="speed_changed" from="CanvasLayer/MovementTool" to="UnitMoveTest" method="_on_MovementTool_speed_changed"]
